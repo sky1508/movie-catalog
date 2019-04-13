@@ -1,0 +1,83 @@
+3 microservices - Movie catalog api application
+
+api/userid - returns json object - id, name, ist of movies
+
+1st Api - Movie catalog api, i/p - userid, o/p - movie list with details
+2nd Api - Movie Info service, i/p - movieId, o/p - movie details
+3rd - Ratings Data Service, i/p - userId, o/p - movieId and ratings
+
+
+
+Add the following properties to avoid errors from Eureka:
+
+server:
+  port: 8302
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  server:
+    waitTimeInMsWhenSyncEmpty: 0
+	
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+---------------------------
+Add the below code to enable spring cloud imports:
+<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+Copy pasting dependencies will not directly import them, try rediting those properties and saving the pom to import them
+--------------------------------------------------------------------------
+To remove the NoSuchMethodError Exception
+
+<spring-cloud.version>Finchley.SR2</spring-cloud.version>
+change the spring cloud eureka version - not needed
+
+maven clean 
+build
+
+--------------------------No need of specifying the additional properties if we are running the server on 8761 port-----------
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:8302/
+  instance:
+    hostname: localhost
+	
+-------------------------------------------------------------------------------------------------------------------------
+
+Eureka also does client side load balancing
+
+Web services will load the other service urls from default cache, so it doesn't go to eureka always for lookup
+-------------------running jar using cmdline to create another instance of service------------------------------------------------------------------------------------------
+
+java -jar movie-info-service-0.01-SNAPSHOT.jar
+
+java -Dserver.port=8203 -jar jar_name
+
+---------------------Fault Tolerance------------------------------
+
+Eureka sends hearbeat to services to check whether they are alive or not
+
+if eureka goes down, services will be picked up from the cache
+
+-------------------------URLS
+
+http://localhost:8081/catalog/foo
+
+http://localhost:8083/ratingsdata/users/1
+
+http://localhost:8082/movies/1
+

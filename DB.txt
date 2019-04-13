@@ -1,0 +1,58 @@
+username one to many movieId one to one rating
+
+
+if mysql is not able to connet to localhost at 127.0.0.1
+open services window
+run mysql55/80 service
+start server from workbench
+
+
+---------------------pending--------------------------------
+
+post url
+http://localhost:8500/db/add
+body
+{
+        "userName": "test1",
+        "movies": ["ABC"]
+}
+
+------------progress----------------------
+{
+        "username": "test1",
+        "ratingsMap": {"DEF":4}
+}
+Working, rating and username are getting saved properly
+
+defined method to add ratings,
+need to connect movie and movieID, so that before saving data to movie table, movieId can be fetched from movieName table
+
+
+---------------------Errors---------------------------------------------------------------
+@Entity
+@Table(name = "movie", catalog = "test")
+
+
+Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: Not a managed type:
+
+We need to add @Entity annotation on the pojo
+
+------------------------------------------------------------------------------progress-------------------------------
+i/p 
+{
+        "username": "test2",
+        "ratingsList": [{"userName":"test2","movieName":"TRON","rating":5}]
+}
+
+addRating is working properly
+
+{
+        "username": "test3",
+        "ratingsList": [{"userName":"test3","movieName":"IRON MAN","rating":3},
+        				{"userName":"test3","movieName":"IRON MAN 2","rating":5}]
+}
+
+GetMovieRatingbyUsername is working properly
+
+use FlatMap to collect multiple properties, flatMap should have properties of the same type
+----------------------------------------------------------------------------------------------------------------------------
